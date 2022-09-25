@@ -2,8 +2,6 @@ import Programas.Programas;
 import Sistema.Sistema;
 
 public class App {
-
-	
 	public static Programas progs;
     public static void main(String args[]) {
 
