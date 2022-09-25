@@ -11,8 +11,8 @@ public class App {
 		Sistema s = new Sistema();			
 		//s.loadAndExec(progs.fibonacci10);
 		//s.loadAndExec(progs.progMinimo);
-		s.loadAndExec(progs.fatorial);
-		//s.loadAndExec(progs.fatorialTRAP); // saida
+		//s.loadAndExec(progs.fatorial);
+		s.loadAndExec(progs.fatorialTRAP); // saida
 		//s.loadAndExec(progs.fibonacciTRAP); // entrada
 		//s.loadAndExec(progs.PC); // bubble sort
 			

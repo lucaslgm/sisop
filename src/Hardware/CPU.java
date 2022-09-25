@@ -42,10 +42,9 @@ public class CPU {
         debug = _debug; // se true, print da instrucao em execucao
     }
 
-    // todo acesso a memoria tem que ser verificado
-    private boolean legal(int e) { 
-        // ????
-        return true;
+    // _todo acesso a memoria tem que ser verificado
+    private boolean legal(int e) {
+        return (e >= 0 && e <= mem.tamMem);
     }
 
     // toda operacao matematica deve avaliar se ocorre overflow
@@ -54,7 +53,6 @@ public class CPU {
             irpt = Interrupts.intOverflow;
             return false;
         }
-        ;
         return true;
     }
 
@@ -84,8 +82,8 @@ public class CPU {
                 }
                 // --------------------------------------------------------------------------------------------------
                 // EXECUTA INSTRUCAO NO ir
-                switch (ir.opc) { // conforme o opcode (código de operação) executa
-
+                switch (ir.opc) {
+                    // conforme o opcode (código de operação) executa
                     // Instrucoes de Busca e Armazenamento em Memoria
                     case LDI: // Rd ← k
                         reg[ir.r1] = ir.p;
@@ -260,7 +258,7 @@ public class CPU {
 
                     // Chamada de sistema
                     case TRAP:
-                        sysCall.handle(); // <<<<< aqui desvia para rotina de chamada de sistema, no momento so temos IO
+                        sysCall.trapHandling(); // <<<<< aqui desvia para rotina de chamada de sistema, no momento so temos IO
                         pc++;
                         break;
 
