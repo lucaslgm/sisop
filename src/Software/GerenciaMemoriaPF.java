@@ -29,11 +29,12 @@ public class GerenciaMemoriaPF {
         if(program.length > partitionSize){
             System.out.println("Programa maior que a partição");
             return -1;
-        }else{
+        }else if(program.length < partitionSize){
             for(int i = 0; i < nmrParticao; i++){
                 if(freePartition[i]){
                     freePartition[i] = false;
                     System.out.println("Alocado na partição:" + i);
+                    return i;
                 }
             }
         }
