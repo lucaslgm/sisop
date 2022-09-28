@@ -1,3 +1,6 @@
-## Getting Started
+## Trabalho de Sistemas Operacionais
 
-Criar sua própria branch antes de subir qualquer alteração.
+Integrantes:
+- Diego Klein
+- Vitor Delela
+- Lucas Martins
