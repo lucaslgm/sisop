@@ -9,7 +9,7 @@ import Hardware.Word;
 public class Programas {
         // este fatorial so aceita valores positivos. nao pode ser zero
         public Word[] fatorial = new Word[] {
-                new Word(Opcode.LDI, 0, -1, 4), // 0 r0 é valor a calcular fatorial
+                new Word(Opcode.LDI, 0, -1, 5), // 0 r0 é valor a calcular fatorial
                 new Word(Opcode.LDI, 1, -1, 1), // 1 r1 é 1 para multiplicar (por r0)
                 new Word(Opcode.LDI, 6, -1, 1), // 2 r6 é 1 para ser o decremento
                 new Word(Opcode.LDI, 7, -1, 8), // 3 r7 tem posicao de stop do programa = 8
@@ -68,7 +68,7 @@ public class Programas {
         // ate aqui - serie de fibonacci ficara armazenada
 
         public Word[] fatorialTRAP = new Word[] {
-                new Word(Opcode.LDI, 0, -1, 7), // numero para colocar na memoria
+                new Word(Opcode.LDI, 0, -1, 5), // numero para colocar na memoria
                 new Word(Opcode.STD, 0, -1, 50),
                 new Word(Opcode.LDD, 0, -1, 50),
                 new Word(Opcode.LDI, 1, -1, -1),
@@ -177,7 +177,7 @@ public class Programas {
                         // passando pelos N valores
                         // faz swap de vizinhos se da esquerda maior que da direita
         public Word[] PC = new Word[] {
-                new Word(Opcode.LDI, 7, -1, 5), // TAMANHO DO BUBBLE SORT (N)
+                new Word(Opcode.LDI, 7, -1, 10), // TAMANHO DO BUBBLE SORT (N)
                 new Word(Opcode.LDI, 6, -1, 5), // aux N
                 new Word(Opcode.LDI, 5, -1, 46), // LOCAL DA MEMORIA
                 new Word(Opcode.LDI, 4, -1, 47), // aux local memoria
