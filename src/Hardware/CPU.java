@@ -300,11 +300,6 @@ public class CPU {
                         pc++;
                         break;
 
-                    case SHMALLOC:
-                        sysCall.shmalloc();
-                        pc++;
-                        break;
-
                     // Inexistente
                     default:
                         irpt = Interrupts.intInstrucaoInvalida;

@@ -41,8 +41,7 @@ public class Sistema{   // a VM com tratamento de interrupções
 
 	public void carregaAndExecutaPrograma(Word[] programa){
 		int pid = carregaPrograma(programa);
-		vm.cpu.setContext(0, vm.tamMem - 1, 0);      // seta estado da cpu ]
-		vm.cpu.run();
+		runByProcessId(pid);
 	}
 
 	public void runByProcessId (int pid){

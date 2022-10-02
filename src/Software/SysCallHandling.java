@@ -4,6 +4,7 @@ import Hardware.CPU;
 import Hardware.Opcode;
 import Hardware.VM;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 // ------------------- C H A M A D A S  D E  S I S T E M A  - rotinas de tratamento ---------------------- //
@@ -46,7 +47,4 @@ public class SysCallHandling {
         }
     }
 
-    public void shmalloc(){
-        //todo
-    }
 }

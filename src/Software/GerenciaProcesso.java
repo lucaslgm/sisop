@@ -18,13 +18,6 @@ public class GerenciaProcesso {
         this.listaPCBs = new LinkedList<>();
     }
 
-    /*
-    1º: Aloca Memória
-    2º: Cria PCB
-    3º: Carrega Código
-    4º: Encadeia PCB na estrutura
-    5º:
-     */
     public PCB create(Word[] p) {
         System.out.println("Novo processo criado");
         PCB processControlBlock;

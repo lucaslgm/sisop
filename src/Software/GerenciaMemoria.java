@@ -16,8 +16,6 @@ public class GerenciaMemoria {
     public GerenciaMemoria(Memory memory) {
         this.memory = memory;
         this.tamFrame = this.tamPg = 16;
-        //this.tamFrame = 16;
-        //this.tamPg = 16;
         this.numeroFrames = this.memory.tamMem / this.tamPg;
 
         availableFrames = initFrames(memory.tamMem, tamFrame);
