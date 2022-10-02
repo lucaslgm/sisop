@@ -14,11 +14,11 @@ public class PCB {
     public ProcessStatus status;
     public int[] reg;
 
-    public PCB(int id, ArrayList<Integer> allocatedPages) {
+    public PCB(int id, ArrayList<Integer> allocatedPages, int pc) {
         this.allocatedPages = allocatedPages;
         this.id = id;
         this.interrupt = Interrupts.noInterrupt;
-        this.pc = 0;
+        this.pc = pc;
         this.status = ProcessStatus.READY;
         this.reg = new int[10];
     }
@@ -30,5 +30,13 @@ public class PCB {
 
     public int getId() {
         return this.id;
+    }
+
+    public String toString(){
+        return "ID: " + id +
+                "\tPages: " + allocatedPages +
+                "\tProgram Counter: " + pc +
+                "\tStatus: " + status +
+                "\tInterrupts: " + interrupt;
     }
 }

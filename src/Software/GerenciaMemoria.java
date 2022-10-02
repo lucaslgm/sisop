@@ -8,24 +8,24 @@ import java.util.ArrayList;
 
 public class GerenciaMemoria {
     public Memory memory;
-    public int pageSize;
-    public int frameSize;
-    public int frameCount;
+    public int tamPg;
+    public int tamFrame;
+    public int numeroFrames;
     public boolean[] availableFrames;
 
     public GerenciaMemoria(Memory memory) {
         this.memory = memory;
-        this.frameSize = 16;
-        this.pageSize = 16;
-        this.frameCount = this.memory.tamMem / this.pageSize;
+        this.tamFrame = this.tamPg = 16;
+        //this.tamFrame = 16;
+        //this.tamPg = 16;
+        this.numeroFrames = this.memory.tamMem / this.tamPg;
 
-        availableFrames = initFrames(memory.tamMem, frameSize);
+        availableFrames = initFrames(memory.tamMem, tamFrame);
     }
 
     // Inicializa o array de frames com valor TRUE
     private boolean[] initFrames(int tamMem, int pageSize) {
         availableFrames = new boolean[(tamMem / pageSize)];
-
         for (int i = 0; i < availableFrames.length; i++)
             availableFrames[i] = true;
         return availableFrames;
@@ -35,14 +35,12 @@ public class GerenciaMemoria {
         int quantidadeDeFramesQueVaiOcupar = 0;
 
         // Se for exatamente o tamanho da pagina, se não usa um a mais
-        if (numeroPalavras % frameSize == 0)
-            quantidadeDeFramesQueVaiOcupar = ((numeroPalavras / frameSize));
-        else quantidadeDeFramesQueVaiOcupar = ((numeroPalavras / frameSize) + 1);
+        if (numeroPalavras % tamFrame == 0) quantidadeDeFramesQueVaiOcupar = ((numeroPalavras / tamFrame));
+        else quantidadeDeFramesQueVaiOcupar = ((numeroPalavras / tamFrame) + 1);
 
         int quantidadeDeFramesDisponiveis = 0;
-        for (int i = 0; i < availableFrames.length; i++) {
+        for (int i = 0; i < availableFrames.length; i++)
             if (availableFrames[i]) quantidadeDeFramesDisponiveis++;
-        }
 
         return (quantidadeDeFramesQueVaiOcupar <= quantidadeDeFramesDisponiveis);
     }
@@ -51,10 +49,19 @@ public class GerenciaMemoria {
     public ArrayList<Integer> aloca(Word[] p) {
         int quantidadeDeFramesQueVaiOcupar = 0;
 
+        int tamanhoAlocar = p.length;
+
+        for(Word w : p){
+            if (w.opc.equals(Opcode.LDD) || w.opc.equals(Opcode.STD))
+                if (w.p > tamanhoAlocar)
+                    tamanhoAlocar = w.p;
+        }
+
+        System.out.println("Alocadas " + tamanhoAlocar + " posicoes...");
+
         // Se for exatamente o tamanho da Pagina, se nao usa um a mais
-        if (p.length % frameSize == 0)
-            quantidadeDeFramesQueVaiOcupar = ((p.length / frameSize));
-        else quantidadeDeFramesQueVaiOcupar = ((p.length / frameSize) + 1);
+        if (tamanhoAlocar % tamFrame == 0) quantidadeDeFramesQueVaiOcupar = ((tamanhoAlocar / tamFrame));
+        else quantidadeDeFramesQueVaiOcupar = ((tamanhoAlocar / tamFrame) + 1);
 
         int quantidadeNovosFramesOcupados = 0;
         int posicao = 0;
@@ -66,21 +73,25 @@ public class GerenciaMemoria {
                 availableFrames[f] = false;
                 quantidadeNovosFramesOcupados++;
                 paginas.add(f);
-            }
 
-            for (int j = (f * frameSize); j < (f + 1) * frameSize; j++) {
-                if (posicao < p.length) {
-                    memory.m[j].opc = p[posicao].opc;
-                    memory.m[j].r1 = p[posicao].r1;
-                    memory.m[j].r2 = p[posicao].r2;
-                    memory.m[j].p = p[posicao].p;
-                    posicao++;
-                } else {
-                    break;
+                for (int j = (f*tamFrame); j < (f+1)*tamFrame; j++) {
+                    if (posicao < p.length) {
+                        memory.m[j].opc = p[posicao].opc;
+                        memory.m[j].r1 = p[posicao].r1;
+                        memory.m[j].r2 = p[posicao].r2;
+                        memory.m[j].p = p[posicao].p;
+                        posicao++;
+                    } else {
+                        break;
+                    }
                 }
             }
-            if (quantidadeNovosFramesOcupados == quantidadeDeFramesQueVaiOcupar)
+
+            if (quantidadeNovosFramesOcupados == quantidadeDeFramesQueVaiOcupar){
+                //memory.dump(0,memory.tamMem);
                 return paginas; //Retorna um array de inteiros com os índices dos frames.
+            }
+
         }
         return null;
     }
@@ -91,7 +102,7 @@ public class GerenciaMemoria {
             for (int i = 0; i < availableFrames.length; i++) {
                 if (pagina == i) {
                     availableFrames[i] = true; // Libera o frame
-                    for (int position = (i * frameSize); position < (i + 1) * frameSize; position++) {
+                    for (int position = (i * tamFrame); position < (i + 1) * tamFrame; position++) {
                         memory.m[position] = new Word(Opcode.___, -1,-1,-1); //Esvazia memoria
                     }
                 }

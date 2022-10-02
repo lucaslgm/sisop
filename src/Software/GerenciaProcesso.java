@@ -1,8 +1,10 @@
 package Software;
 
 import Hardware.Memory;
+import Hardware.Opcode;
 import Hardware.Word;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,12 +18,29 @@ public class GerenciaProcesso {
         this.listaPCBs = new LinkedList<>();
     }
 
+    /*
+    1º: Aloca Memória
+    2º: Cria PCB
+    3º: Carrega Código
+    4º: Encadeia PCB na estrutura
+    5º:
+     */
     public PCB create(Word[] p) {
-        System.out.println("Gerente Processo criado");
+        System.out.println("Novo processo criado");
         PCB processControlBlock;
 
-        if (gerenciaMemoria.temEspacoParaAlocar(p.length)) {
-            processControlBlock = new PCB(processId, gerenciaMemoria.aloca(p));
+        int tamanhoAlocar = p.length;
+
+        for(Word w : p){
+            if (w.opc.equals(Opcode.LDD) || w.opc.equals(Opcode.STD))
+                if (w.p > tamanhoAlocar)
+                    tamanhoAlocar = w.p; //se utilizar algum LDD ou STD com posicao de memoria maior que o numero de palavras declaradas, aloca mais paginas
+        }
+
+        if (gerenciaMemoria.temEspacoParaAlocar(tamanhoAlocar)) {
+            //System.out.println("Alocando espaço para: " + p.length + " palavras...");
+            ArrayList<Integer> paginas = gerenciaMemoria.aloca(p);
+            processControlBlock = new PCB(processId, paginas, (paginas.get(0)*gerenciaMemoria.tamFrame));
             ++processId;
 
             listaPCBs.add(processControlBlock);
@@ -34,17 +53,29 @@ public class GerenciaProcesso {
     }
 
     public void finish(PCB processo) {
-        System.out.println("Gerente Processo encerrado.");
+        System.out.println("Processo encerrado: " + processo.id);
         gerenciaMemoria.desaloca(processo.getAllocatedPages());
         listaPCBs.remove(processo);
     }
 
-    public PCB getProcess(int id) {
-        if (listaPCBs.peek().getId() == id) {
-            return listaPCBs.peek();
-        } else {
-            System.out.println("Não foi possível encontrar o processo de ID: " + processId);
-            return null;
+    public PCB getProcessByID(int id) {
+        for (PCB pcb : listaPCBs){
+            if (pcb.getId() == id){
+                return pcb;
+            }
         }
+        return null;
+    }
+
+    public void listAllProcesses(){
+        System.out.println("Processos: ");
+        for(PCB pcb : listaPCBs){
+            System.out.println(pcb.toString());
+        }
+    }
+
+    public int getProcessLineFromMemory(int line, int processId){
+        int pageId = getProcessByID(processId).getAllocatedPages().get(line/gerenciaMemoria.tamFrame);
+        return pageId*gerenciaMemoria.tamFrame+(line% gerenciaMemoria.tamFrame);
     }
 }

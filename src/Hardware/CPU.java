@@ -3,6 +3,8 @@ package Hardware;
 import Software.InterruptHandling;
 import Software.SysCallHandling;
 
+import java.util.ArrayList;
+
 public class CPU {
     /* valores maximo e minimo para inteiros nesta cpu */
     public int maxInt;
@@ -13,7 +15,8 @@ public class CPU {
     public Word ir; // instruction register,
     public int[] reg; // registradores da CPU
     public Interrupts irpt; // durante instrucao, interrupcao pode ser sinalizada
-
+    ArrayList<Integer> pages;
+    public int tamFrame;
     /*
      * base e limite de acesso na memoria
      * por enquanto toda memoria pode ser acessada pelo processo rodando
@@ -31,7 +34,7 @@ public class CPU {
     private boolean debug; // se true entao mostra cada instrucao em execucao
 
     // ref a MEMORIA e interrupt handler passada na criacao da CPU
-    public CPU(Memory _mem, InterruptHandling _ih, SysCallHandling _sysCall, boolean _debug) { 
+    public CPU(Memory _mem, InterruptHandling _ih, SysCallHandling _sysCall, boolean _debug, int _tamFrame) {
         maxInt = 32767; // capacidade de representacao modelada
         minInt = -32767; // se exceder deve gerar interrupcao de overflow
         mem = _mem; // usa mem para acessar funcoes auxiliares (dump)
@@ -40,6 +43,7 @@ public class CPU {
         ih = _ih; // aponta para rotinas de tratamento de int
         sysCall = _sysCall; // aponta para rotinas de tratamento de chamadas de sistema
         debug = _debug; // se true, print da instrucao em execucao
+        tamFrame = _tamFrame;
     }
 
     // _todo acesso a memoria tem que ser verificado
@@ -68,6 +72,19 @@ public class CPU {
         irpt = Interrupts.noInterrupt;
     }
 
+    public void setContext(int _base, int _limite, int _pc, ArrayList<Integer> _pages) {
+        base = _base;
+        limite = _limite;
+        pc = _pc;
+        irpt = Interrupts.noInterrupt;
+        pages = _pages;
+    }
+
+    public int convertePosicaoMemoria(int posicaoPrograma){
+        int pageId = pages.get(posicaoPrograma/tamFrame);
+        return pageId * tamFrame + (posicaoPrograma % tamFrame);
+    }
+
     /*
      * execucao da CPU supoe que o contexto da CPU, vide acima, esta devidamente setado
      */
@@ -77,6 +94,7 @@ public class CPU {
             if (legal(pc)) { // pc valido
                 ir = m[pc]; // <<<<<<<<<<<< busca posicao da memoria apontada por pc, guarda em ir
                 if (debug) {
+                    //for (int r=0; r<reg.length;r++) System.out.print("reg["+r+"] = "+reg[r]+"\t"); //debuga registradores
                     System.out.print("                               pc: " + pc + "       exec: ");
                     mem.dump(ir);
                 }
@@ -92,7 +110,8 @@ public class CPU {
 
                     case LDD: // Rd <- [A]
                         if (legal(ir.p)) {
-                            reg[ir.r1] = m[ir.p].p;
+                            reg[ir.r1] = m[convertePosicaoMemoria(ir.p)].p;
+                            //reg[ir.r1] = m[ir.p].p;
                             pc++;
                         }
                         break;
@@ -106,8 +125,10 @@ public class CPU {
 
                     case STD: // [A] ← Rs
                         if (legal(ir.p)) {
-                            m[ir.p].opc = Opcode.DATA;
-                            m[ir.p].p = reg[ir.r1];
+                            m[convertePosicaoMemoria(ir.p)].opc = Opcode.DATA;
+                            m[convertePosicaoMemoria(ir.p)].p = reg[ir.r1];
+                            //m[ir.p].opc = Opcode.DATA;
+                            //m[ir.p].p = reg[ir.r1];
                             pc++;
                         }
                         ;
@@ -115,8 +136,10 @@ public class CPU {
 
                     case STX: // [Rd] ←Rs
                         if (legal(reg[ir.r1])) {
-                            m[reg[ir.r1]].opc = Opcode.DATA;
-                            m[reg[ir.r1]].p = reg[ir.r2];
+                            m[convertePosicaoMemoria(reg[ir.r1])].opc = Opcode.DATA;
+                            m[convertePosicaoMemoria(reg[ir.r1])].p = reg[ir.r2];
+                            //m[reg[ir.r1]].opc = Opcode.DATA;
+                            //m[reg[ir.r1]].p = reg[ir.r2];
                             pc++;
                         }
                         ;
@@ -160,12 +183,14 @@ public class CPU {
 
                     // Instrucoes JUMP
                     case JMP: // PC <- k
-                        pc = ir.p;
+                        pc = convertePosicaoMemoria(ir.p);
+                        //pc = ir.p;
                         break;
 
                     case JMPIG: // If Rc > 0 Then PC ← Rs Else PC ← PC +1
                         if (reg[ir.r2] > 0) {
-                            pc = reg[ir.r1];
+                            pc = convertePosicaoMemoria(reg[ir.r1]);
+                            //pc = reg[ir.r1];
                         } else {
                             pc++;
                         }
@@ -173,7 +198,8 @@ public class CPU {
 
                     case JMPIGK: // If RC > 0 then PC <- k else PC++
                         if (reg[ir.r2] > 0) {
-                            pc = ir.p;
+                            pc = convertePosicaoMemoria(ir.p);
+                            //pc = ir.p;
                         } else {
                             pc++;
                         }
@@ -181,7 +207,8 @@ public class CPU {
 
                     case JMPILK: // If RC < 0 then PC <- k else PC++
                         if (reg[ir.r2] < 0) {
-                            pc = ir.p;
+                            pc = convertePosicaoMemoria(ir.p);
+                            //pc = ir.p;
                         } else {
                             pc++;
                         }
@@ -189,7 +216,8 @@ public class CPU {
 
                     case JMPIEK: // If RC = 0 then PC <- k else PC++
                         if (reg[ir.r2] == 0) {
-                            pc = ir.p;
+                            pc = convertePosicaoMemoria(ir.p);
+                            //pc = ir.p;
                         } else {
                             pc++;
                         }
@@ -197,7 +225,8 @@ public class CPU {
 
                     case JMPIL: // if Rc < 0 then PC <- Rs Else PC <- PC +1
                         if (reg[ir.r2] < 0) {
-                            pc = reg[ir.r1];
+                            pc = convertePosicaoMemoria(reg[ir.r1]);
+                            //pc = reg[ir.r1];
                         } else {
                             pc++;
                         }
@@ -205,19 +234,23 @@ public class CPU {
 
                     case JMPIE: // If Rc = 0 Then PC <- Rs Else PC <- PC +1
                         if (reg[ir.r2] == 0) {
-                            pc = reg[ir.r1];
+                            pc = convertePosicaoMemoria(reg[ir.r1]);
+                            //pc = reg[ir.r1];
                         } else {
                             pc++;
                         }
                         break;
 
                     case JMPIM: // PC <- [A]
-                        pc = m[ir.p].p;
+                        pc = m[convertePosicaoMemoria(ir.p)].p;
+                        //pc = m[ir.p].p;
                         break;
 
                     case JMPIGM: // If RC > 0 then PC <- [A] else PC++
                         if (reg[ir.r2] > 0) {
-                            pc = m[ir.p].p;
+                            //pc = m[convertePosicaoMemoria(ir.p)].p;
+                            pc = convertePosicaoMemoria(m[convertePosicaoMemoria(ir.p)].p);
+                            //pc = m[ir.p].p;
                         } else {
                             pc++;
                         }
@@ -225,7 +258,9 @@ public class CPU {
 
                     case JMPILM: // If RC < 0 then PC <- k else PC++
                         if (reg[ir.r2] < 0) {
-                            pc = m[ir.p].p;
+                            //pc = m[convertePosicaoMemoria(ir.p)].p;
+                            pc = convertePosicaoMemoria(m[convertePosicaoMemoria(ir.p)].p);
+                            //pc = m[ir.p].p;
                         } else {
                             pc++;
                         }
@@ -233,7 +268,9 @@ public class CPU {
 
                     case JMPIEM: // If RC = 0 then PC <- k else PC++
                         if (reg[ir.r2] == 0) {
-                            pc = m[ir.p].p;
+                            //pc = m[convertePosicaoMemoria(ir.p)].p;
+                            pc = convertePosicaoMemoria(m[convertePosicaoMemoria(ir.p)].p);
+                            //pc = m[ir.p].p;
                         } else {
                             pc++;
                         }
@@ -241,7 +278,8 @@ public class CPU {
 
                     case JMPIGT: // If RS>RC then PC <- k else PC++
                         if (reg[ir.r1] > reg[ir.r2]) {
-                            pc = ir.p;
+                            pc = convertePosicaoMemoria(ir.p);
+                            //pc = ir.p;
                         } else {
                             pc++;
                         }
@@ -258,7 +296,12 @@ public class CPU {
 
                     // Chamada de sistema
                     case TRAP:
-                        sysCall.trapHandling(); // <<<<< aqui desvia para rotina de chamada de sistema, no momento so temos IO
+                        sysCall.trapHandling(convertePosicaoMemoria(reg[9]));
+                        pc++;
+                        break;
+
+                    case SHMALLOC:
+                        sysCall.shmalloc();
                         pc++;
                         break;
 
@@ -276,4 +319,9 @@ public class CPU {
             }
         } // FIM DO CICLO DE UMA INSTRUÇÃO
     }
+
+    public void setDebug(boolean value){
+        debug = value;
+    }
+
 }
