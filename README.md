@@ -61,3 +61,32 @@ Trace On:
 ![Trace On](Imagens/1A_TraceOn.png)
 
 #### 1B
+
+Criar Processo:
+
+![Criar Processo](Imagens/1B_CriarProcesso.png)
+
+Desaloca Processo:
+
+![Desaloca Processo](Imagens/1B_Desaloca.png)
+
+Dump de Memoria:
+
+![Dump Memória](Imagens/1B_DumpMemoria.png)
+
+Dump de Processo:
+
+![Dump Processo](Imagens/1B_DumpProcesso.png)
+
+Executa Processos:
+
+![Executa Processo](Imagens/1B_Executa.png)
+
+Lista Processos:
+
+![Lista Processo](Imagens/1B_ListarProcessos.png)
+
+Trace Off:
+
+![Trace Off](Imagens/1B_TraceOn_TraceOff.png)
+
