@@ -24,8 +24,40 @@ Para a execução do trabalho, recomendamos o uso da IDE Visual Studio Code.
 - [x] GM
 - [x] GP
 
-#### Execução
+#### Testes
 
 #### 1A
+
+Criar Processo:
+
+![Criar Processo](Imagens/1A_CriarProcesso.png)
+
+Desaloca Processo:
+
+![Desaloca Processo](Imagens/1A_Desaloca.png)
+
+Dump de Memoria:
+
+![Dump Memória](Imagens/1A_DumpMemoria.png)
+
+Dump de Processo:
+
+![Dump Processo](Imagens/1A_DumpProcesso.png)
+
+Executa Processos:
+
+![Executa Processo](Imagens/1A_Executa.png)
+
+Lista Processos:
+
+![Lista Processo](Imagens/1A_ListarProcessos.png)
+
+Trace Off:
+
+![Trace Off](Imagens/1A_TraceOff.png)
+
+Trace On:
+
+![Trace On](Imagens/1A_TraceOn.png)
 
 #### 1B
