@@ -24,3 +24,8 @@ Para a execução do trabalho, recomendamos o uso da IDE Visual Studio Code.
 - [x] GM
 - [x] GP
 
+#### Execução
+
+#### 1A
+
+#### 1B
