@@ -12,8 +12,15 @@ O projeto esta dividido em 2 pastas diferentes:
 
 Para a execução do trabalho, recomendamos o uso da IDE Visual Studio Code.
 
-Instruções de como executar o projeto:
+### Implementação
 
-- 1 - Dentro do arquivo App.java dentro da pasta src, selecione "Run" acima do nome da classe.
+#### 1A
+- [x] PCB
+- [x] GM
+- [x] GP
 
-![VSCode Red Circle.jpg](Imagens/VSCode Red Circle.jpg)
+#### 1B
+- [x] PCB
+- [x] GM
+- [x] GP
+
