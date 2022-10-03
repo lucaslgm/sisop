@@ -7,28 +7,35 @@ import java.util.ArrayList;
 public class PCB {
     public int id;
     public Interrupts interrupt;
-    public ArrayList<Integer> allocatedPages;
+    public int particaoAlocada;
 
     // CPU context
     public int pc;
     public ProcessStatus status;
     public int[] reg;
 
-    public PCB(int id, ArrayList<Integer> allocatedPages) {
-        this.allocatedPages = allocatedPages;
+    public PCB(int id, int particaoAlocada, int pc) {
+        this.particaoAlocada = particaoAlocada;
         this.id = id;
         this.interrupt = Interrupts.noInterrupt;
-        this.pc = 0;
+        this.pc = pc;
         this.status = ProcessStatus.READY;
         this.reg = new int[10];
     }
 
-    //retorna a lista de paginas de um processo
-    public ArrayList<Integer> getAllocatedPages() {
-        return this.allocatedPages;
+    public int getParticaoAlocada(){
+        return particaoAlocada;
     }
 
     public int getId() {
         return this.id;
+    }
+
+    public String toString(){
+        return "ID: " + id +
+                "\tPartição: " + particaoAlocada +
+                "\tProgram Counter: " + pc +
+                "\tStatus: " + status +
+                "\tInterrupts: " + interrupt;
     }
 }

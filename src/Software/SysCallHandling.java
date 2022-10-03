@@ -18,7 +18,7 @@ public class SysCallHandling {
         System.out.println("                                               Chamada de Sistema com op  /  par:  "+ vm.cpu.reg[8] + " / " + vm.cpu.reg[9]);
     }
 
-    public void trapHandling (){
+    public void trapHandling (int reg9convertido){
         Scanner io = new Scanner(System.in);
 
         System.out.println("reg[8] = " + vm.cpu.reg[8]);
@@ -40,7 +40,7 @@ public class SysCallHandling {
 
             case 2:
                 System.out.println("SAÍDA");
-                System.out.println("Valor: " + vm.cpu.mem.m[vm.cpu.reg[9]].p);
+                System.out.println("Valor: " + vm.cpu.mem.m[reg9convertido].p);
                 break;
         }
     }

@@ -7,44 +7,51 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class GerenciaProcesso {
-    public GerenciaMemoria gerenciaMemoria;
+    public GerenciaMemoriaPF gerenciaMemoriaPF;
     public Queue<PCB> listaPCBs;
     public int processId = 0;
 
     public GerenciaProcesso(Memory memory) {
-        this.gerenciaMemoria = new GerenciaMemoria(memory);
+        this.gerenciaMemoriaPF = new GerenciaMemoriaPF(memory);
         this.listaPCBs = new LinkedList<>();
     }
 
     public PCB create(Word[] p) {
-        System.out.println("Gerente Processo criado");
         PCB processControlBlock;
-
-        if (gerenciaMemoria.temEspacoParaAlocar(p.length)) {
-            processControlBlock = new PCB(processId, gerenciaMemoria.aloca(p));
-            ++processId;
-
-            listaPCBs.add(processControlBlock);
-        } else {
-            System.out.println("Sem espaço na memória para criar o processo de ID: " + processId);
-            processControlBlock = null;
-        }
-
+        int newPartition = gerenciaMemoriaPF.aloca(p);
+        if (newPartition < 0) return null;
+        processControlBlock = new PCB(processId, newPartition, (newPartition*gerenciaMemoriaPF.partitionSize));
+        ++processId;
+        listaPCBs.add(processControlBlock);
         return processControlBlock;
     }
 
     public void finish(PCB processo) {
-        System.out.println("Gerente Processo encerrado.");
-        gerenciaMemoria.desaloca(processo.getAllocatedPages());
+        System.out.println("Processo encerrado: " + processo.id);
+        gerenciaMemoriaPF.desaloca(processo.id);
         listaPCBs.remove(processo);
     }
 
-    public PCB getProcess(int id) {
-        if (listaPCBs.peek().getId() == id) {
-            return listaPCBs.peek();
-        } else {
-            System.out.println("Não foi possível encontrar o processo de ID: " + processId);
-            return null;
+    public PCB getProcessByID(int id) {
+        for (PCB pcb : listaPCBs){
+            if (pcb.getId() == id){
+                return pcb;
+            }
         }
+        return null;
+    }
+
+    public void listAllProcesses(){
+        System.out.println("Processos: ");
+        for(PCB pcb : listaPCBs){
+            System.out.println(pcb.toString());
+        }
+    }
+
+    public int getMemoryPartitionFromProcess(int pid){
+        for (PCB pcb : listaPCBs){
+            if (pcb.id == pid) return pcb.getParticaoAlocada();
+        }
+        return -1;
     }
 }

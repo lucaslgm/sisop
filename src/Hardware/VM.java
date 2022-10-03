@@ -1,6 +1,8 @@
 package Hardware;
 
+import Software.GerenciaProcesso;
 import Software.InterruptHandling;
+import Software.PCB;
 import Software.SysCallHandling;
 
 // ------------------------------------ V M  - constituida de CPU e MEMORIA ------------------------------------ //
@@ -10,15 +12,27 @@ public class VM {
   public Word[] m;
   public Memory mem;
   public CPU cpu;
+  public GerenciaProcesso gerenteProcesso;
   
   // vm deve ser configurada com endereço de tratamento de interrupcoes e de chamadas de sistema
   public VM(InterruptHandling ih, SysCallHandling sysCall){
-    // cria memória
     tamMem = 1024;
     mem = new Memory(tamMem);
     m = mem.m;
+    gerenteProcesso = new GerenciaProcesso(mem);
 
-    // cria cpu
-    cpu = new CPU(mem,ih,sysCall, true);  // true liga debug
+    cpu = new CPU(mem,ih,sysCall, true, gerenteProcesso.gerenciaMemoriaPF.partitionSize);  // true liga debug
+  }
+
+  public PCB criaProcesso(Word[] p){
+    return gerenteProcesso.create(p);
+  }
+
+  public void encerraProcesso(PCB pcb){
+    gerenteProcesso.finish(pcb);
+  }
+
+  public void listaProcessos(){
+    gerenteProcesso.listAllProcesses();
   }
 }
