@@ -70,4 +70,7 @@ public class Sistema{   // a VM com tratamento de interrupções
 		System.out.println(vm.gerenteProcesso.getProcessByID(processId).toString());
 	}
 
+	public boolean existeProcesso(int pid){
+		return vm.existeProcesso(pid);
+	}
 }

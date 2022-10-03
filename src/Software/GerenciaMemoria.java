@@ -55,7 +55,7 @@ public class GerenciaMemoria {
                     tamanhoAlocar = w.p;
         }
 
-        System.out.println("Alocadas " + tamanhoAlocar + " posicoes...");
+        //System.out.println("Alocadas " + tamanhoAlocar + " posicoes...");
 
         // Se for exatamente o tamanho da Pagina, se nao usa um a mais
         if (tamanhoAlocar % tamFrame == 0) quantidadeDeFramesQueVaiOcupar = ((tamanhoAlocar / tamFrame));

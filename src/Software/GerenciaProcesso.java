@@ -71,4 +71,10 @@ public class GerenciaProcesso {
         int pageId = getProcessByID(processId).getAllocatedPages().get(line/gerenciaMemoria.tamFrame);
         return pageId*gerenciaMemoria.tamFrame+(line% gerenciaMemoria.tamFrame);
     }
+
+    public boolean hasProcess(int pid){
+        for(PCB pcb : listaPCBs)
+            if (pcb.id == pid) return true;
+        return false;
+    }
 }
