@@ -5,6 +5,7 @@ import Hardware.Word;
 import Programas.Programas;
 import Software.InterruptHandling;
 import Software.PCB;
+import Software.ProcessStatus;
 import Software.SysCallHandling;
 
 // -------------------  S I S T E M A -------------------------------------------------------------------- //
@@ -72,7 +73,9 @@ public class Sistema{   // a VM com tratamento de interrupções
 	public void runByProcessId (int pid){
 		vm.cpu.setContext(0, vm.tamMem - 1,
 				getProgramCounterbyProcessId(pid), vm.gerenteProcesso.getProcessByID(pid).getParticaoAlocada()); // seta estado da cpu ]
+		vm.gerenteProcesso.getProcessByID(pid).setStatus(ProcessStatus.RUNNING);
 		vm.cpu.run();
+		vm.gerenteProcesso.getProcessByID(pid).setStatus(ProcessStatus.READY);
 	}
 
 	public int getProgramCounterbyProcessId(int pid){
@@ -95,5 +98,7 @@ public class Sistema{   // a VM com tratamento de interrupções
 		System.out.println(vm.gerenteProcesso.getProcessByID(processId).toString());
 	}
 
-
+	public boolean existeProcesso(int pid){
+		return vm.existeProcesso(pid);
+	}
 }

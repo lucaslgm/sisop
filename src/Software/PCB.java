@@ -38,4 +38,8 @@ public class PCB {
                 "\tStatus: " + status +
                 "\tInterrupts: " + interrupt;
     }
+
+    public void setStatus(ProcessStatus status){
+        this.status = status;
+    }
 }

@@ -43,9 +43,7 @@ public class GerenciaProcesso {
 
     public void listAllProcesses(){
         System.out.println("Processos: ");
-        for(PCB pcb : listaPCBs){
-            System.out.println(pcb.toString());
-        }
+        for(PCB pcb : listaPCBs) System.out.println(pcb.toString());
     }
 
     public int getMemoryPartitionFromProcess(int pid){
@@ -53,5 +51,11 @@ public class GerenciaProcesso {
             if (pcb.id == pid) return pcb.getParticaoAlocada();
         }
         return -1;
+    }
+
+    public boolean hasProcess(int pid){
+        for(PCB pcb : listaPCBs)
+            if (pcb.id == pid) return true;
+        return false;
     }
 }

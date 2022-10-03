@@ -35,4 +35,8 @@ public class VM {
   public void listaProcessos(){
     gerenteProcesso.listAllProcesses();
   }
+
+  public boolean existeProcesso(int pid){
+    return gerenteProcesso.hasProcess(pid);
+  }
 }

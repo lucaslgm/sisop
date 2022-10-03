@@ -41,28 +41,36 @@ public class App {
 					System.out.print("Programa: ");
 					int aux2;
 					aux2 = in.nextInt();
+					int id;
 
 					switch (aux2) {
 						case 1:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.fibonacci10));
+							id = s.carregaPrograma(progs.fibonacci10);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 2:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.fibonacciTRAP));
+							id = s.carregaPrograma(progs.fibonacciTRAP);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 3:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.fatorial));
+							id = s.carregaPrograma(progs.fatorial);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 4:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.fatorialTRAP));
+							id = s.carregaPrograma(progs.fatorialTRAP);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 5:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.progMinimo));
+							id = s.carregaPrograma(progs.progMinimo);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 6:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.PB));
+							id = s.carregaPrograma(progs.PB);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						case 7:
-							System.out.println("Identificador do Processo: " + s.carregaPrograma(progs.PC));
+							id = s.carregaPrograma(progs.PC);
+							System.out.println("Processo criado - Identificador do Processo: " + (id<0?"Não foi possível criar o processo.":id));
 							break;
 						default:
 							break;
@@ -76,13 +84,17 @@ public class App {
 				case 3:
 					System.out.print("\nProcess ID: ");
 					int pid = in.nextInt();
-					s.dumpPCB(pid);
+					if (s.existeProcesso(pid))
+						s.dumpPCB(pid);
+					else System.out.println("Processo não encontrado.");
 					break;
 
 				case 4:
 					System.out.print("\nProcess ID: ");
 					int pid2 = in.nextInt();
-					s.encerraProcessoById(pid2);
+					if (s.existeProcesso(pid2))
+						s.encerraProcessoById(pid2);
+					else System.out.println("Processo não encontrado.");
 					break;
 
 				case 5:
@@ -90,13 +102,17 @@ public class App {
 					int beginning = in.nextInt();
 					System.out.print("Fim: ");
 					int end = in.nextInt();
-					s.dumpMemoria(beginning, end);
+					if (beginning < 0 || beginning > s.vm.tamMem || end < 0 || end > s.vm.tamMem || beginning > end){
+						System.out.println("Endereços inválidos.");
+					} else s.dumpMemoria(beginning, end);
 					break;
 
 				case 6:
 					System.out.print("\nProcess ID: ");
 					int pid3 = in.nextInt();
-					s.runByProcessId(pid3);
+					if (s.existeProcesso(pid3))
+						s.runByProcessId(pid3);
+					else System.out.println("Processo não encontrado.");
 					break;
 
 				case 7:
