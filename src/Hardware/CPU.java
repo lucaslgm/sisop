@@ -17,6 +17,7 @@ public class CPU {
     public Interrupts irpt; // durante instrucao, interrupcao pode ser sinalizada
     ArrayList<Integer> pages;
     public int tamFrame;
+    public int runningPid;
     /*
      * base e limite de acesso na memoria
      * por enquanto toda memoria pode ser acessada pelo processo rodando
@@ -72,12 +73,13 @@ public class CPU {
         irpt = Interrupts.noInterrupt;
     }
 
-    public void setContext(int _base, int _limite, int _pc, ArrayList<Integer> _pages) {
+    public void setContext(int _base, int _limite, int _pc, ArrayList<Integer> _pages, int _runningPid) {
         base = _base;
         limite = _limite;
         pc = _pc;
         irpt = Interrupts.noInterrupt;
         pages = _pages;
+        runningPid = _runningPid;
     }
 
     public int convertePosicaoMemoria(int posicaoPrograma){
@@ -296,7 +298,17 @@ public class CPU {
 
                     // Chamada de sistema
                     case TRAP:
-                        sysCall.trapHandling(convertePosicaoMemoria(reg[9]));
+                        sysCall.trapHandling(convertePosicaoMemoria(reg[9]), runningPid);
+                        pc++;
+                        break;
+
+                    case SHMALLOC:
+                        sysCall.trapHandling(convertePosicaoMemoria(reg[9]), runningPid);
+                        pc++;
+                        break;
+
+                    case SHMREF:
+                        sysCall.trapHandling(convertePosicaoMemoria(reg[9]), runningPid);
                         pc++;
                         break;
 

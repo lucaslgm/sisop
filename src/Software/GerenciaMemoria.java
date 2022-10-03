@@ -107,4 +107,14 @@ public class GerenciaMemoria {
             }
         }
     }
+
+    public int adicionaPage(){
+        for (int i = 0; i < availableFrames.length; i++){
+            if (availableFrames[i]){
+                availableFrames[i] = false;
+                return i;
+            }
+        }
+        return -1;
+    }
 }

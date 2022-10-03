@@ -77,4 +77,21 @@ public class GerenciaProcesso {
             if (pcb.id == pid) return true;
         return false;
     }
+
+    public int adicionaPaginaEmProcesso(int pid){
+        if (getProcessByID(pid) != null){
+            int newPageId = gerenciaMemoria.adicionaPage();
+            if (newPageId >= 0){
+                getProcessByID(pid).adicionaNovaPagina(newPageId);
+                return newPageId;
+            }
+        }
+        return -1;
+    }
+
+    public void adicionaExisitingPaginaEmProcesso(int pid, int page){
+        if (getProcessByID(pid) != null){
+            getProcessByID(pid).adicionaNovaPagina(page);
+        }
+    }
 }

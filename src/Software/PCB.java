@@ -32,6 +32,10 @@ public class PCB {
         return this.id;
     }
 
+    public void adicionaNovaPagina(int pagina){
+        allocatedPages.add(pagina);
+    }
+
     public String toString(){
         return "ID: " + id +
                 "\tPages: " + allocatedPages +

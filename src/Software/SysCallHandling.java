@@ -11,16 +11,18 @@ import java.util.Scanner;
 
 public class SysCallHandling {
     private VM vm;
+    public ArrayList<Integer> chaves;
     
     public void setVM(VM _vm){
         vm = _vm;
+        chaves = new ArrayList<>();
     }
 
     public void handle() {
         System.out.println("                                               Chamada de Sistema com op  /  par:  "+ vm.cpu.reg[8] + " / " + vm.cpu.reg[9]);
     }
 
-    public void trapHandling (int reg9convertido){
+    public void trapHandling (int reg9convertido, int pid){
         Scanner io = new Scanner(System.in);
 
         System.out.println("reg[8] = " + vm.cpu.reg[8]);
@@ -43,6 +45,20 @@ public class SysCallHandling {
             case 2:
                 System.out.println("SAÍDA");
                 System.out.println("Valor: " + vm.cpu.mem.m[reg9convertido].p);
+                break;
+
+            case 3:
+                int novaPag = vm.gerenteProcesso.adicionaPaginaEmProcesso(pid);
+                if (novaPag > 0){
+                    chaves.add(vm.cpu.reg[9], novaPag);
+                }
+                else vm.cpu.reg[9] = -1;
+                break;
+
+            case 4:
+                if (chaves.get(vm.cpu.reg[9]) != null){
+                    vm.gerenteProcesso.adicionaExisitingPaginaEmProcesso(pid, chaves.get(vm.cpu.reg[9]));
+                }
                 break;
         }
     }
